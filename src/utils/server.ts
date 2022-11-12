@@ -6,13 +6,48 @@ export const init = async () => {
     host: "localhost",
   });
 
-  server.route({
-    method: "GET",
-    path: "/",
-    handler: (request, h) => {
-      return "Hello World!";
+  const routes = [
+    {
+      method: "GET",
+      path: "/images",
+      handler: (request, h) => {
+        return "GET, Hello World!";
+      },
     },
-  });
+    {
+      method: "POST",
+      path: "/images",
+      handler: (request, h) => {
+        return "POST, Hello World!";
+      },
+    },
+    {
+      method: "GET",
+      path: "/images/{id}",
+      handler: (request, h) => {
+        return "GET id, Hello World!";
+      },
+    },
+
+    {
+      method: "PATCH",
+      path: "/images/{id}",
+      handler: (request, h) => {
+        return "PATCH, Hello World!";
+      },
+    },
+    {
+      method: "DELETE",
+      path: "/images/{id}",
+      handler: (request, h) => {
+        return "DELETE, Hello World!";
+      },
+    },
+  ];
+
+  for (const route of routes) {
+    server.route(route);
+  }
 
   await server.start();
   console.log("Server running on %s", server.info.uri);
