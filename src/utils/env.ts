@@ -8,6 +8,9 @@ const ServerENVSchema = z.object({
   SERVER_PORT: z.string().transform((port) => parseInt(port)),
   PEXELS_API_KEY: z.string(),
   PEXELS_API_URL: z.string().transform((url) => new URL(url)),
+  CLOUDINARY_CLOUD_NAME: z.string(),
+  CLOUDINARY_API_KEY: z.string(),
+  CLOUDINARY_API_SECRET: z.string(),
 });
 
 let envData: z.output<typeof ServerENVSchema>;
