@@ -53,3 +53,18 @@ export async function getImages(limit: number) {
 
   return result;
 }
+
+export async function createImage(uri: string) {
+  const image = await prismaClient.image.create({
+    data: {
+      uri,
+      owner: { connect: { id: 1 } },
+    },
+  });
+
+  return {
+    id: image.id,
+    uri: image.uri,
+    hits: image.hits,
+  };
+}

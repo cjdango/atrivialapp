@@ -8,7 +8,7 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "Image" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "public_id" TEXT NOT NULL,
+    "public_id" TEXT,
     "hits" INTEGER NOT NULL DEFAULT 1,
     "uri" TEXT NOT NULL,
     "ownerId" INTEGER NOT NULL,

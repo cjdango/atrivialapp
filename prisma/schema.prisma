@@ -19,7 +19,7 @@ model User {
 
 model Image {
   id        Int    @id @default(autoincrement())
-  public_id String @unique
+  public_id String? @unique
   hits      Int    @default(1)
   uri       String
   owner     User   @relation(fields: [ownerId], references: [id])
