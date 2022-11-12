@@ -11,7 +11,21 @@ export const init = async () => {
       method: "GET",
       path: "/images",
       handler: (request, h) => {
-        return "GET, Hello World!";
+        return {
+          limit: 5,
+          data: [
+            {
+              id: 1,
+              hits: 1,
+              uri: "cloudinary.com/",
+            },
+            {
+              id: 2,
+              hits: 1,
+              uri: "cloudinary.com/",
+            },
+          ],
+        };
       },
     },
     {
