@@ -1,30 +1,40 @@
 import Hapi from "@hapi/hapi";
+import fetch from "node-fetch";
+import { z } from "zod";
+import { ServerENVSchema } from "./env";
 
-export const init = async () => {
+export const initServer = async (envConfig: z.output<typeof ServerENVSchema>) => {
   const server = Hapi.server({
-    port: 3000,
-    host: "localhost",
+    port: envConfig.SERVER_PORT,
+    host: envConfig.SERVER_HOST,
   });
 
-  const routes = [
+  const routes: Hapi.ServerRoute[] = [
     {
       method: "GET",
       path: "/images",
-      handler: (request, h) => {
+      handler: async (request, h) => {
+        const res = await fetch(
+          "https://api.pexels.com/v1/curated?per_page=1",
+          {
+            headers: {
+              Authorization: envConfig.PEXELS_API_KEY,
+            },
+          }
+        );
+        const data = (await res.json()) as {
+          photos: { id: number; url: string }[];
+        };
+
+        const photos = data.photos.map((photo) => ({
+          id: photo.id,
+          hits: 1,
+          uri: photo.url,
+        }));
+
         return {
-          limit: 5,
-          data: [
-            {
-              id: 1,
-              hits: 1,
-              uri: "cloudinary.com/",
-            },
-            {
-              id: 2,
-              hits: 1,
-              uri: "cloudinary.com/",
-            },
-          ],
+          limit: 1,
+          data: photos,
         };
       },
     },

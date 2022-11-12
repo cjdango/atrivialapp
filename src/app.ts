@@ -1,3 +1,5 @@
-import { init } from "./utils/server";
+import { loadEnv } from "./utils/env";
+import { initServer } from "./utils/server";
 
-init();
+const envConfig = loadEnv();
+initServer(envConfig);
