@@ -1,6 +1,7 @@
 import cloudinary from "cloudinary";
 import fetch from "node-fetch";
 import { loadEnv } from "../../utils/env";
+import { prismaClient } from "../../utils/prisma";
 
 const envConfig = loadEnv();
 
@@ -26,22 +27,29 @@ export async function getImages(limit: number) {
     photos: { id: number; src: { original: string } }[];
   };
 
-  let db: any[] = [];
+  let result = [];
 
-  await Promise.allSettled(
-    pexelsData.photos.map(async (photo) => {
-      const data = await cloudinary.v2.uploader.upload(photo.src.original, {
-        folder: "pexels",
+  for (const photo of pexelsData.photos) {
+    const { public_id, secure_url } = await cloudinary.v2.uploader.upload(
+      photo.src.original,
+      {
         public_id: photo.id.toString(),
-      });
-      console.log('data', data.public_id);
-      db.push(data);
-    })
-  );
+        folder: "pexels",
+      }
+    );
 
-  return db.map((photo) => ({
-    id: photo.public_id,
-    hits: 1,
-    uri: photo.secure_url,
-  }));
+    const image = await prismaClient.image.upsert({
+      where: { public_id },
+      create: { public_id, uri: secure_url, owner: { connect: { id: 1 } } },
+      update: {},
+    });
+
+    result.push({
+      id: image.id,
+      uri: image.uri,
+      hits: image.hits,
+    });
+  }
+
+  return result;
 }
