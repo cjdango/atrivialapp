@@ -6,4 +6,10 @@ export async function registerHandlers(path: string, router: express.Router) {
     .route(path)
     .get(imageController.getImages)
     .post(imageController.postImage);
+
+  router
+    .route(`${path}/:id`)
+    .get(imageController.getImage)
+    .patch(imageController.patchImage)
+    .delete(imageController.deleteImage);
 }

@@ -68,3 +68,51 @@ export async function createImage(uri: string) {
     hits: image.hits,
   };
 }
+
+export async function getImage(id: number) {
+  await prismaClient.image.findUniqueOrThrow({
+    where: { id },
+  });
+
+  const image = await prismaClient.image.update({
+    where: { id },
+    data: { hits: { increment: 1 } },
+  });
+
+  return {
+    id: image.id,
+    uri: image.uri,
+    hits: image.hits,
+  };
+}
+
+export async function updateImage(
+  id: number,
+  data: { uri?: string; hits?: number }
+) {
+  await prismaClient.image.findUniqueOrThrow({
+    where: { id },
+  });
+
+  const image = await prismaClient.image.update({ where: { id }, data });
+
+  return {
+    id: image.id,
+    uri: image.uri,
+    hits: image.hits,
+  };
+}
+
+export async function deleteImage(id: number) {
+  await prismaClient.image.findUniqueOrThrow({
+    where: { id },
+  });
+
+  const image = await prismaClient.image.delete({ where: { id } });
+
+  return {
+    id: image.id,
+    uri: image.uri,
+    hits: image.hits,
+  };
+}
